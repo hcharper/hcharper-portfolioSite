@@ -48,38 +48,35 @@ export default async function BlogsPage() {
   const blogs = await getBlogs();
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-4">
-        <h1 className="text-4xl font-bold gradient-text">Blog</h1>
-        <p className="text-gray-400 text-lg">
-          Thoughts, tutorials, and insights on web development and technology.
-        </p>
+    <div className="min-h-screen bg-navy px-4 sm:px-8 md:px-12 lg:px-16 py-8 sm:py-12 lg:py-16">
+      <div className="max-w-7xl animate-fadeInUp">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl gradient-text mb-8 sm:mb-12 lg:mb-16 font-bold mt-4 pb-2">Blogs</h1>
       </div>
 
       {blogs.length === 0 ? (
-        <div className="modern-card p-12 text-center">
+        <div className="modern-card p-12 text-center rounded-2xl">
           <p className="text-gray-400">No blog posts yet. Check back soon!</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-7xl">
           {blogs.map((blog) => (
-            <article key={blog._id} className="modern-card p-6 hover:border-teal-500/50 transition-colors">
+            <article key={blog._id} className="modern-card p-4 sm:p-6 hover:border-teal-500/50 transition-colors">
               <Link href={`/blogs/${blog._id}`} className="block space-y-4">
                 <div className="flex items-center gap-4 text-sm text-gray-500">
                   <time dateTime={blog.createdAt}>{formatDate(blog.createdAt)}</time>
                   <span>•</span>
                   <span>{blog.author}</span>
                 </div>
-                <h2 className="text-2xl font-semibold hover:text-teal-400 transition-colors">
+                <h2 className="text-xl sm:text-2xl font-bold text-white hover:text-teal-400 transition-colors">
                   {blog.title}
                 </h2>
-                <p className="text-gray-400">{getExcerpt(blog.content)}</p>
+                <p className="text-white/60 text-sm sm:text-base leading-relaxed">{getExcerpt(blog.content)}</p>
                 {blog.tags && blog.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 pt-2">
                     {blog.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2 py-1 text-xs bg-navy-700 text-gray-300 rounded"
+                        className="px-3 sm:px-4 py-1.5 sm:py-2 bg-navy-light/50 border border-teal/20 rounded-lg text-teal text-xs sm:text-sm font-medium"
                       >
                         #{tag}
                       </span>

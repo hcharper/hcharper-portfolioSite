@@ -67,18 +67,14 @@ export default function ProjectsPage() {
   return (
     <div className="min-h-screen bg-navy px-4 sm:px-8 md:px-12 lg:px-16 py-8 sm:py-12 lg:py-16">
       <div className="max-w-7xl animate-fadeInUp">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl gradient-text mb-4 sm:mb-6 font-bold">Projects</h1>
-        <p className="text-base sm:text-lg md:text-xl text-white/70 mb-8 sm:mb-12 lg:mb-16 max-w-3xl leading-relaxed">
-          A collection of projects showcasing my skills in full-stack development, 
-          Web3, and modern web technologies.
-        </p>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl gradient-text mb-8 sm:mb-12 lg:mb-16 font-bold mt-4 pb-1">Projects</h1>
         
         {projects.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-white/60 text-lg">No projects yet. Check back soon!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 auto-rows-fr">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 auto-rows-fr">
             {projects.map((project, index) => {
               const imageUrl = getProjectImage(project);
               const projectLink = getProjectLink(project);
@@ -86,7 +82,7 @@ export default function ProjectsPage() {
               const cardContent = (
                 <>
                   {/* Project Image */}
-                  <div className="w-full h-48 sm:h-56 lg:h-64 rounded-xl mb-2 sm:mb-3 overflow-hidden bg-gradient-to-br from-teal/20 to-green/20 relative">
+                  <div className="w-full h-56 sm:h-64 lg:h-72 rounded-xl mb-2 sm:mb-3 overflow-hidden bg-gradient-to-br from-teal/20 to-green/20 relative">
                     {imageUrl ? (
                       <img 
                         src={imageUrl} 
@@ -146,7 +142,7 @@ export default function ProjectsPage() {
                   href={projectLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="modern-card p-2.5 sm:p-3 rounded-2xl group block cursor-pointer animate-fadeInUp"
+                  className="modern-card p-4 sm:p-6 rounded-2xl group block cursor-pointer animate-fadeInUp"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {cardContent}
@@ -154,7 +150,7 @@ export default function ProjectsPage() {
               ) : (
                 <div 
                   key={project._id} 
-                  className="modern-card p-2.5 sm:p-3 rounded-2xl group animate-fadeInUp"
+                  className="modern-card p-4 sm:p-6 rounded-2xl group animate-fadeInUp"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {cardContent}
