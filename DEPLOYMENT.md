@@ -1,178 +1,306 @@
-# Deployment Guide for EC2 with SSL
+# Deployment Guide
 
-## Prerequisites on EC2
-- Node.js (v16+) and npm installed
-- MongoDB installed and running
-- Nginx installed with SSL certificates
-- PM2 installed globally: `npm install -g pm2`
-- Git installed
+This guide walks through deploying the Harper Portfolio Site to production using:
+- **Frontend:** Cloudflare Pages
+- **Backend:** Vercel (Serverless)
+- **Database:** MongoDB Atlas
 
-## Step 1: Clone/Update Repository on EC2
+## Prerequisites
 
-```bash
-# SSH into your EC2 instance
-ssh -i your-key.pem ubuntu@your-ec2-ip
+- GitHub repository with your code pushed
+- MongoDB Atlas account (free tier available)
+- Vercel account (free tier available)
+- Cloudflare account (free tier available)
 
-# If this is a new deployment, clone the repo
-cd ~
-git clone <your-repo-url> hcharper-portfolioSite
+---
 
-# If updating from old repo, just navigate to the directory
-cd hcharper-portfolioSite
-git pull origin main
+## Part 1: Set Up MongoDB Atlas
+
+1. **Create a MongoDB Atlas Account**
+   - Go to [https://www.mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas)
+   - Sign up for a free account
+
+2. **Create a New Cluster**
+   - Click "Build a Database"
+   - Choose "M0 (Free)" tier
+   - Select your preferred cloud provider and region
+   - Click "Create Cluster"
+
+3. **Create a Database User**
+   - Go to "Database Access" in the left sidebar
+   - Click "Add New Database User"
+   - Choose "Password" authentication
+   - Create username and password (save these securely!)
+   - Set privileges to "Read and write to any database"
+   - Click "Add User"
+
+4. **Configure Network Access**
+   - Go to "Network Access" in the left sidebar
+   - Click "Add IP Address"
+   - Click "Allow Access from Anywhere" (0.0.0.0/0)
+   - This is required for Vercel serverless functions
+   - Click "Confirm"
+
+5. **Get Connection String**
+   - Go to "Database" in the left sidebar
+   - Click "Connect" on your cluster
+   - Choose "Connect your application"
+   - Copy the connection string (looks like: `mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/`)
+   - Replace `<password>` with your database user password
+   - Add your database name after `.net/` (e.g., `portfoliodb`)
+   - Final format: `mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/portfoliodb`
+
+---
+
+## Part 2: Deploy Backend to Vercel
+
+1. **Push Code to GitHub**
+   ```bash
+   git add .
+   git commit -m "Configure for Vercel deployment"
+   git push
+   ```
+
+2. **Import Project to Vercel**
+   - Go to [https://vercel.com](https://vercel.com)
+   - Click "Add New" → "Project"
+   - Import your GitHub repository
+   - Click "Import"
+
+3. **Configure Project**
+   - **Framework Preset:** Other
+   - **Root Directory:** `./` (leave as default)
+   - **Build Command:** Leave empty (not needed for serverless)
+   - **Output Directory:** Leave empty
+   - **Install Command:** `npm install` (in server directory)
+
+4. **Set Environment Variables**
+   Click "Environment Variables" and add the following:
+
+   | Name | Value | Example |
+   |------|-------|---------|
+   | `MONGODB_URI` | Your MongoDB connection string | `mongodb+srv://user:pass@cluster.mongodb.net/portfoliodb` |
+   | `JWT_SECRET` | A random secure string | `your-super-secret-jwt-key-12345` |
+   | `JWT_EXPIRES_IN` | Token expiration time | `7d` |
+   | `CLIENT_URL` | Your Cloudflare Pages URL | `https://your-site.pages.dev` (add after frontend deployment) |
+   | `NODE_ENV` | Environment | `production` |
+
+5. **Deploy**
+   - Click "Deploy"
+   - Wait for deployment to complete
+   - Copy your Vercel URL (e.g., `https://your-project.vercel.app`)
+
+6. **Update CLIENT_URL**
+   - After deploying frontend (Part 3), come back here
+   - Go to Settings → Environment Variables
+   - Update `CLIENT_URL` with your Cloudflare Pages URL
+   - Redeploy from Deployments tab
+
+---
+
+## Part 3: Deploy Frontend to Cloudflare Pages
+
+1. **Update Production Environment**
+   - Edit `client/.env.production`
+   - Update `REACT_APP_API_URL` with your Vercel backend URL:
+     ```
+     REACT_APP_API_URL=https://your-project.vercel.app
+     ```
+   - Commit and push:
+     ```bash
+     git add client/.env.production
+     git commit -m "Update production API URL"
+     git push
+     ```
+
+2. **Create Cloudflare Pages Project**
+   - Go to [https://dash.cloudflare.com](https://dash.cloudflare.com)
+   - Click "Workers & Pages" in the left sidebar
+   - Click "Create application" → "Pages" → "Connect to Git"
+   - Authorize GitHub and select your repository
+
+3. **Configure Build Settings**
+   - **Project name:** Choose a name (this becomes your subdomain)
+   - **Production branch:** `main` (or your default branch)
+   - **Build command:** `cd client && npm install && npm run build`
+   - **Build output directory:** `client/build`
+
+4. **Set Environment Variables**
+   Click "Environment variables" and add:
+   
+   | Variable | Value |
+   |----------|-------|
+   | `REACT_APP_API_URL` | Your Vercel backend URL (e.g., `https://your-project.vercel.app`) |
+
+5. **Deploy**
+   - Click "Save and Deploy"
+   - Wait for build to complete
+   - Your site will be live at `https://your-project.pages.dev`
+
+6. **Update Backend CLIENT_URL**
+   - Go back to Vercel dashboard
+   - Settings → Environment Variables
+   - Update `CLIENT_URL` with your Cloudflare Pages URL
+   - Go to Deployments → Click "..." on latest → "Redeploy"
+
+---
+
+## Part 4: Verify Deployment
+
+1. **Test Frontend**
+   - Visit your Cloudflare Pages URL
+   - Navigate through the site
+   - Check that pages load correctly
+
+2. **Test API Connection**
+   - Open browser DevTools (F12) → Network tab
+   - Navigate to Projects or Blogs page
+   - Verify API requests go to your Vercel backend
+   - Check for successful 200 responses
+
+3. **Test Admin Login**
+   - Go to `/admin-login`
+   - Login with: `hcharper` / `HCh10192001$`
+   - Verify you can access admin dashboard
+   - Test creating/editing projects and blogs
+
+4. **Check Vercel Logs**
+   - Go to Vercel dashboard → Your project → Logs
+   - Check for any errors
+   - Verify database connections are successful
+
+---
+
+## Part 5: Seed Database (Optional)
+
+If you need to populate the database with initial data:
+
+1. **Update MongoDB URI locally**
+   - Create `server/.env` file
+   - Add: `MONGODB_URI=your-atlas-connection-string`
+
+2. **Run seed script**
+   ```bash
+   cd server
+   node scripts/seedDb.js
+   ```
+
+3. **Verify in MongoDB Atlas**
+   - Go to your cluster → "Browse Collections"
+   - Check that data was inserted
+
+---
+
+## Environment Variables Reference
+
+### Backend (Vercel)
 ```
-
-## Step 2: Configure Environment Variables
-
-```bash
-# Copy example.env to .env
-cd server
-cp example.env .env
-
-# Edit the .env file with production values
-nano .env
-```
-
-Update these values in `.env`:
-```
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/portfolio-db
-JWT_SECRET=<generate-a-strong-random-secret>
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/portfoliodb
+JWT_SECRET=your-super-secret-jwt-key-12345
+JWT_EXPIRES_IN=7d
+CLIENT_URL=https://your-site.pages.dev
 NODE_ENV=production
 ```
 
-To generate a strong JWT secret:
-```bash
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+### Frontend (Cloudflare Pages)
+```
+REACT_APP_API_URL=https://your-project.vercel.app
 ```
 
-## Step 3: Run Deployment Script
-
-```bash
-cd /home/ubuntu/hcharper-portfolioSite
-chmod +x deploy.sh
-./deploy.sh
-```
-
-This will:
-- Install all dependencies (server + client)
-- Build the React production bundle
-- Seed the database with admin user
-
-## Step 4: Configure Nginx
-
-```bash
-# If you already have an nginx config, update it with the new paths
-sudo nano /etc/nginx/sites-available/your-site
-
-# Or copy the example config
-sudo cp nginx.conf.example /etc/nginx/sites-available/portfolio
-```
-
-Update these in your nginx config:
-- `server_name` → your actual domain
-- `ssl_certificate` paths → your SSL cert paths
-- `root` path → `/home/ubuntu/hcharper-portfolioSite/client/build`
-- Backend proxy port → should match your server PORT (5000)
-
-```bash
-# Test nginx configuration
-sudo nginx -t
-
-# Reload nginx
-sudo systemctl reload nginx
-```
-
-## Step 5: Start the Server with PM2
-
-```bash
-cd /home/ubuntu/hcharper-portfolioSite
-
-# Start the server
-pm2 start ecosystem.config.js
-
-# Save PM2 process list and configure to start on boot
-pm2 save
-pm2 startup
-```
-
-## Step 6: Verify Deployment
-
-1. Check server is running:
-```bash
-pm2 status
-pm2 logs portfolio-server
-```
-
-2. Check MongoDB is running:
-```bash
-sudo systemctl status mongod
-```
-
-3. Test the site:
-- Visit your domain in a browser
-- Go to `/admin-login`
-- Login with: `hcharper` / `HCh10192001$`
+---
 
 ## Troubleshooting
 
-### Server won't start
-```bash
-# Check logs
-pm2 logs portfolio-server
+### CORS Errors
+- Verify `CLIENT_URL` in Vercel matches your Cloudflare Pages URL exactly
+- Check that there's no trailing slash
+- Redeploy backend after updating environment variables
 
-# Common issues:
-# - MongoDB not running: sudo systemctl start mongod
-# - Port already in use: Check .env PORT and kill old process
-# - Missing .env file: Copy from example.env
-```
+### Database Connection Errors
+- Verify MongoDB Atlas allows connections from 0.0.0.0/0
+- Check that `MONGODB_URI` has correct username and password
+- Ensure database name is included in connection string
 
-### 502 Bad Gateway
-- Server not running: `pm2 restart portfolio-server`
-- Wrong proxy port in nginx: Check nginx config matches server PORT
-- Firewall blocking port: `sudo ufw allow 5000`
+### 404 on API Requests
+- Verify `REACT_APP_API_URL` in Cloudflare Pages is set correctly
+- Check browser DevTools → Network tab for actual request URL
+- Ensure `vercel.json` is in project root
 
-### Static files not loading
-- Client not built: `cd client && npm run build`
-- Wrong nginx root path: Should point to `client/build`
-- Nginx not reloaded: `sudo systemctl reload nginx`
+### Serverless Function Timeout
+- Vercel free tier has 10-second timeout for serverless functions
+- Optimize database queries if hitting limits
+- Consider indexing frequently queried fields in MongoDB
 
-### Can't login
-- Admin user not seeded: `cd server && node scripts/seedDb.js`
-- Wrong JWT_SECRET: Check server .env file
-- MongoDB connection issue: Check MONGODB_URI in .env
+### Build Fails on Cloudflare Pages
+- Check build command includes `cd client &&`
+- Verify `client/build` directory is correct output location
+- Check Cloudflare Pages build logs for specific errors
+
+---
 
 ## Updating the Site
 
-When you make changes:
+### Code Changes
+1. Make changes locally and test
+2. Commit and push to GitHub
+3. Vercel automatically redeploys backend
+4. Cloudflare Pages automatically redeploys frontend
 
-```bash
-cd /home/ubuntu/hcharper-portfolioSite
-git pull origin main
+### Environment Variable Changes
+- **Vercel:** Settings → Environment Variables → Edit → Redeploy
+- **Cloudflare Pages:** Workers & Pages → Your project → Settings → Environment variables → Edit → Redeploy
 
-# If server code changed:
-cd server
-npm install
-pm2 restart portfolio-server
+---
 
-# If client code changed:
-cd ../client
-npm install
-npm run build
-sudo systemctl reload nginx
-```
+## Custom Domain (Optional)
 
-## Admin Credentials
-- **Username**: hcharper
-- **Password**: HCh10192001$
-- **Login URL**: https://your-domain.com/admin-login
+### Cloudflare Pages
+1. Go to your project → Custom domains
+2. Click "Set up a custom domain"
+3. Enter your domain
+4. Follow DNS configuration instructions
 
-## PM2 Commands Cheat Sheet
-```bash
-pm2 list                    # Show all processes
-pm2 logs portfolio-server   # Show logs
-pm2 restart portfolio-server # Restart server
-pm2 stop portfolio-server   # Stop server
-pm2 delete portfolio-server # Remove from PM2
-pm2 monit                   # Monitor in real-time
-```
+### Vercel
+1. Go to your project → Settings → Domains
+2. Add your domain
+3. Configure DNS as instructed
+
+---
+
+## Monitoring
+
+- **Vercel Logs:** Dashboard → Your project → Logs (real-time)
+- **Cloudflare Analytics:** Pages → Your project → Analytics
+- **MongoDB Metrics:** Atlas → Metrics (database performance)
+
+---
+
+## Cost Breakdown
+
+All services used have free tiers that should cover most personal portfolio sites:
+
+- **MongoDB Atlas:** 512MB storage, shared resources (FREE)
+- **Vercel:** 100GB bandwidth, unlimited API requests (FREE)
+- **Cloudflare Pages:** Unlimited sites, unlimited requests, 500 builds/month (FREE)
+
+---
+
+## Security Best Practices
+
+1. **Never commit `.env` files** - Already in `.gitignore`
+2. **Use strong JWT_SECRET** - Generate with: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+3. **Keep MongoDB Atlas IP restricted** - 0.0.0.0/0 is required for Vercel but monitor access
+4. **Regularly update dependencies** - Run `npm audit fix` periodically
+5. **Use HTTPS only** - Both Vercel and Cloudflare provide SSL by default
+
+---
+
+## Next Steps
+
+After successful deployment:
+- [ ] Set up a custom domain
+- [ ] Configure MongoDB backups in Atlas
+- [ ] Set up monitoring/alerts
+- [ ] Create content (blogs, projects)
+- [ ] Test on multiple devices/browsers
+- [ ] Share your portfolio! 🚀

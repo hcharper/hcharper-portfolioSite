@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-// Base URL for API requests - proxy will forward to backend
-const API_BASE_URL = '/api';
+// Use environment variable for production, fallback to proxy for development
+const API_BASE_URL = process.env.REACT_APP_API_URL 
+  ? `${process.env.REACT_APP_API_URL}/api`
+  : '/api';
 
 // Get all projects
 export const getAllProjects = async () => {

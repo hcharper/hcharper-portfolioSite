@@ -29,6 +29,11 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 const start = async () => {
   try {
     await connectDB();
@@ -39,4 +44,10 @@ const start = async () => {
   }
 };
 
-start();
+// Only start server if not in serverless environment
+if (process.env.VERCEL !== '1') {
+  start();
+}
+
+// Export for Vercel serverless
+module.exports = app;

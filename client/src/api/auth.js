@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = '/api/auth';
+// Use environment variable for production, fallback to proxy for development
+const API_BASE_URL = process.env.REACT_APP_API_URL 
+  ? `${process.env.REACT_APP_API_URL}/api/auth`
+  : '/api/auth';
 
 // Register a new user
 export const register = async (userData) => {

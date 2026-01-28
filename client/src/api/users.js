@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = '/api/users';
+// Use environment variable for production, fallback to proxy for development
+const API_BASE_URL = process.env.REACT_APP_API_URL 
+  ? `${process.env.REACT_APP_API_URL}/api/users`
+  : '/api/users';
 
 // Get user profile by ID
 export const getUserById = async (id, token) => {
