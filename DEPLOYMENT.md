@@ -1,7 +1,7 @@
 # Deployment Guide
 
 This guide walks through deploying the Harper Portfolio Site to production using:
-- **Frontend:** Cloudflare Pages
+- **Frontend:** Vercel (separate project)
 - **Backend:** Vercel (Serverless)
 - **Database:** MongoDB Atlas
 
@@ -10,7 +10,6 @@ This guide walks through deploying the Harper Portfolio Site to production using
 - GitHub repository with your code pushed
 - MongoDB Atlas account (free tier available)
 - Vercel account (free tier available)
-- Cloudflare account (free tier available)
 
 ---
 
@@ -98,13 +97,13 @@ This guide walks through deploying the Harper Portfolio Site to production using
 
 ---
 
-## Part 3: Deploy Frontend to Cloudflare Pages
+## Part 3: Deploy Frontend to Vercel (Separate Project)
 
 1. **Update Production Environment**
    - Edit `client/.env.production`
    - Update `REACT_APP_API_URL` with your Vercel backend URL:
      ```
-     REACT_APP_API_URL=https://your-project.vercel.app
+     REACT_APP_API_URL=https://your-backend-project.vercel.app
      ```
    - Commit and push:
      ```bash
@@ -113,34 +112,35 @@ This guide walks through deploying the Harper Portfolio Site to production using
      git push
      ```
 
-2. **Create Cloudflare Pages Project**
-   - Go to [https://dash.cloudflare.com](https://dash.cloudflare.com)
-   - Click "Workers & Pages" in the left sidebar
-   - Click "Create application" → "Pages" → "Connect to Git"
-   - Authorize GitHub and select your repository
+2. **Create New Vercel Project for Frontend**
+   - Go to [https://vercel.com](https://vercel.com)
+   - Click "Add New" → "Project"
+   - Import the **same** GitHub repository
+   - Click "Import"
 
-3. **Configure Build Settings**
-   - **Project name:** Choose a name (this becomes your subdomain)
-   - **Production branch:** `main` (or your default branch)
-   - **Build command:** `cd client && npm install && npm run build`
-   - **Build output directory:** `client/build`
+3. **Configure Frontend Project**
+   - **Framework Preset:** Create React App (should auto-detect)
+   - **Root Directory:** Click "Edit" and enter `client`
+   - **Build Command:** `npm run build` (auto-configured)
+   - **Output Directory:** `build` (auto-configured)
+   - **Install Command:** `npm install --legacy-peer-deps`
 
 4. **Set Environment Variables**
-   Click "Environment variables" and add:
+   Click "Environment Variables" and add:
    
    | Variable | Value |
    |----------|-------|
-   | `REACT_APP_API_URL` | Your Vercel backend URL (e.g., `https://your-project.vercel.app`) |
+   | `REACT_APP_API_URL` | Your Vercel backend URL (e.g., `https://your-backend.vercel.app`) |
 
 5. **Deploy**
-   - Click "Save and Deploy"
+   - Click "Deploy"
    - Wait for build to complete
-   - Your site will be live at `https://your-project.pages.dev`
+   - Your site will be live at `https://your-frontend.vercel.app`
 
 6. **Update Backend CLIENT_URL**
-   - Go back to Vercel dashboard
+   - Go to your **backend** Vercel project
    - Settings → Environment Variables
-   - Update `CLIENT_URL` with your Cloudflare Pages URL
+   - Update `CLIENT_URL` with your frontend Vercel URL
    - Go to Deployments → Click "..." on latest → "Redeploy"
 
 ---
@@ -202,9 +202,9 @@ CLIENT_URL=https://your-site.pages.dev
 NODE_ENV=production
 ```
 
-### Frontend (Cloudflare Pages)
+### Frontend (Vercel - separate project)
 ```
-REACT_APP_API_URL=https://your-project.vercel.app
+REACT_APP_API_URL=https://your-backend.vercel.app
 ```
 
 ---
