@@ -13,8 +13,11 @@ export const metadata: Metadata = {
   title: "Harrison Harper | Full Stack Developer",
   description: "Full-stack developer portfolio showcasing projects, blogs, and technical articles",
   icons: {
-    icon: "/favicon.jpg",
-    shortcut: "/favicon.jpg",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.jpg", type: "image/jpeg" },
+    ],
+    shortcut: "/favicon.ico",
     apple: "/favicon.jpg",
   },
 };
