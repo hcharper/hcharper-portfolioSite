@@ -2,9 +2,9 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
 
-const Navigation = () => {
+const Navigation = ({ mobile, onItemClick }) => {
   const location = useLocation();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -15,11 +15,33 @@ const Navigation = () => {
   ];
 
   // Add conditional nav items based on auth state
-  const authNavItems = isLoggedIn
-    ? [{ name: 'Profile', path: '/profile' }]
-    : [{ name: 'Login', path: '/login' }];
+  // Only show Admin Dashboard when logged in as admin
+  const authNavItems = isLoggedIn && user?.role === 'admin'
+    ? [{ name: 'Admin', path: '/admin-dash' }]
+    : [];
 
   const allNavItems = [...navItems, ...authNavItems];
+
+  if (mobile) {
+    return (
+      <nav className="flex flex-col p-4">
+        {allNavItems.map((item) => (
+          <Link
+            key={item.name}
+            to={item.path}
+            onClick={onItemClick}
+            className={`py-3 px-4 font-mono text-base transition-colors border-b border-white/5 last:border-0 ${
+              location.pathname === item.path
+                ? 'text-teal'
+                : 'text-white/70 hover:text-white'
+            }`}
+          >
+            '{item.name.toLowerCase()}'
+          </Link>
+        ))}
+      </nav>
+    );
+  }
 
   return (
     <nav className="flex items-center gap-4">
@@ -28,7 +50,7 @@ const Navigation = () => {
         <React.Fragment key={item.name}>
           <Link
             to={item.path}
-            className={`font-mono text-base transition-colors ${
+            className={`font-mono text-sm lg:text-base transition-colors whitespace-nowrap ${
               location.pathname === item.path
                 ? 'text-teal'
                 : 'text-white/70 hover:text-white'

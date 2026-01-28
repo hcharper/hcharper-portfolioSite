@@ -25,10 +25,12 @@ export const getBlogById = async (id) => {
   }
 };
 
-// Create a new blog
-export const createBlog = async (blogData) => {
+// Create a new blog (requires auth token)
+export const createBlog = async (blogData, token) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/blogs`, blogData);
+    const response = await axios.post(`${API_BASE_URL}/blogs`, blogData, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     return response.data;
   } catch (error) {
     console.error('Error creating blog:', error);
@@ -36,10 +38,12 @@ export const createBlog = async (blogData) => {
   }
 };
 
-// Update an existing blog
-export const updateBlog = async (id, blogData) => {
+// Update an existing blog (requires auth token)
+export const updateBlog = async (id, blogData, token) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/blogs/${id}`, blogData);
+    const response = await axios.put(`${API_BASE_URL}/blogs/${id}`, blogData, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     return response.data;
   } catch (error) {
     console.error(`Error updating blog with id ${id}:`, error);
@@ -47,10 +51,12 @@ export const updateBlog = async (id, blogData) => {
   }
 };
 
-// Delete a blog
-export const deleteBlog = async (id) => {
+// Delete a blog (requires auth token)
+export const deleteBlog = async (id, token) => {
   try {
-    const response = await axios.delete(`${API_BASE_URL}/blogs/${id}`);
+    const response = await axios.delete(`${API_BASE_URL}/blogs/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     return response.data;
   } catch (error) {
     console.error(`Error deleting blog with id ${id}:`, error);

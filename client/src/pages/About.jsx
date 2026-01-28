@@ -23,22 +23,22 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-navy px-16 py-16">
+    <div className="min-h-screen bg-navy px-4 sm:px-8 md:px-12 lg:px-16 py-8 sm:py-12 lg:py-16">
       {/* Header */}
-      <div className="max-w-5xl mb-24 animate-fadeInUp">
-        <h1 className="text-display gradient-text mb-6">About Me</h1>
-        <p className="text-2xl text-white/70 leading-relaxed font-light">
+      <div className="max-w-5xl mb-12 sm:mb-16 lg:mb-24 animate-fadeInUp">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-display gradient-text mb-4 sm:mb-6">About Me</h1>
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/70 leading-relaxed font-light">
           Passionate full-stack developer with expertise in modern web technologies 
           and a focus on building exceptional user experiences.
         </p>
       </div>
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-24">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-12 sm:mb-16 lg:mb-24">
         {/* Profile Card */}
         <div className="lg:col-span-1 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
-          <div className="modern-card p-8 rounded-2xl">
-            <img src="https://github.com/hcharper.png" alt="Harrison Harper" className="w-full aspect-square rounded-full mb-6 object-cover" />
+          <div className="modern-card p-6 sm:p-8 rounded-2xl">
+            <img src="https://github.com/hcharper.png" alt="Harrison Harper" className="w-32 h-32 sm:w-full sm:aspect-square rounded-full sm:rounded-2xl mb-4 sm:mb-6 object-cover mx-auto sm:mx-0" />
             <h2 className="text-2xl font-bold text-white mb-4">Harrison Harper</h2>
             <p className="text-teal font-semibold mb-6">Full Stack Developer</p>
             

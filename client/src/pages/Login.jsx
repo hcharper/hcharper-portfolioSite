@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
 
 const Login = () => {
@@ -29,7 +29,7 @@ const Login = () => {
     const result = await login(formData);
 
     if (result.success) {
-      navigate('/profile');
+      navigate('/admin-dash');
     } else {
       setError(result.message || 'Login failed. Please try again.');
     }
@@ -96,10 +96,7 @@ const Login = () => {
 
           <div className="mt-6 text-center">
             <p className="text-white/60">
-              Don't have an account?{' '}
-              <Link to="/create-account" className="text-teal hover:text-bright-green font-semibold transition-colors">
-                Sign up
-              </Link>
+              Admin access only
             </p>
           </div>
         </div>

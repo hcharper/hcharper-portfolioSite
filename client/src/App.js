@@ -10,9 +10,6 @@ import Contact from './pages/Contact';
 import SingleBlog from './pages/SingleBlog';
 import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
-import SignUp from './pages/SignUp';
-import Profile from './pages/Profile';
-import ProtectedRoute from './pages/ProtectedRoute';
 import PrivateRoute from './pages/PrivateRoute';
 import NotFound from './pages/NotFound';
 
@@ -28,16 +25,7 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/create-account" element={<SignUp />} />
-            <Route 
-              path="/profile" 
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              } 
-            />
+            <Route path="/admin-login" element={<Login />} />
             <Route 
               path="/admin-dash" 
               element={

@@ -8,6 +8,7 @@ const { PORT } = require('./config');
 const blogsRouter = require('./routes/blogsRouter');
 const usersRouter = require('./routes/userRouter');
 const authRouter = require('./routes/authRouter');
+const projectsRouter = require('./routes/projectsRouter');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/projects', projectsRouter);
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../client/build')));

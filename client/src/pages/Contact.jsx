@@ -36,14 +36,14 @@ const Contact = () => {
 
   return (
     <div>
-      <section className="min-h-screen px-[103px] py-[80px] bg-navy">
-        <p className="font-extrabold text-[56px] gradient-text mb-10 animate-fadeInUp leading-tight">Contact Me</p>
+      <section className="min-h-screen px-4 sm:px-8 md:px-12 lg:px-[103px] py-8 sm:py-12 lg:py-[80px] bg-navy">
+        <p className="font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-[56px] gradient-text mb-6 sm:mb-10 animate-fadeInUp leading-tight">Contact Me</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-[1400px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-[1400px]">
           {/* Contact Information */}
           <div>
-            <p className="font-extrabold text-[32px] text-white mb-4">Get In Touch</p>
-            <p className="text-white text-[18px] mb-6">
+            <p className="font-extrabold text-xl sm:text-2xl lg:text-[32px] text-white mb-3 sm:mb-4">Get In Touch</p>
+            <p className="text-white text-sm sm:text-base lg:text-[18px] mb-4 sm:mb-6">
             I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
           </p>
           

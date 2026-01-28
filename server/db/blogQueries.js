@@ -6,15 +6,15 @@ const createBlog = async (data) => {
 };
 
 const getAllBlogs = async () => {
-  return Blog.find().populate('user');
+  return Blog.find().populate('user').populate('linkedProjects');
 };
 
 const getBlogById = async (id) => {
-  return Blog.findById(id).populate('user');
+  return Blog.findById(id).populate('user').populate('linkedProjects');
 };
 
 const updateBlog = async (id, data) => {
-  return Blog.findByIdAndUpdate(id, data, { new: true });
+  return Blog.findByIdAndUpdate(id, data, { new: true }).populate('linkedProjects');
 };
 
 const deleteBlog = async (id) => {

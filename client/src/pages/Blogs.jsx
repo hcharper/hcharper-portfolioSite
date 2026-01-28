@@ -5,7 +5,6 @@ import { getAllBlogs } from '../api/blogs';
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -13,30 +12,9 @@ const Blogs = () => {
         setLoading(true);
         const data = await getAllBlogs();
         setBlogs(data);
-        setError(null);
       } catch (err) {
-        // Use sample data if API fails
-        setBlogs([
-          {
-            _id: '1',
-            title: 'Sample Blog Post One',
-            content: 'This is a sample blog post demonstrating the blog layout and styling. In a production environment, this would be replaced with real content from the database.',
-            createdAt: new Date().toISOString()
-          },
-          {
-            _id: '2',
-            title: 'Sample Blog Post Two',
-            content: 'Another sample blog post to showcase the grid layout and card design. The actual blog functionality would connect to your backend API.',
-            createdAt: new Date().toISOString()
-          },
-          {
-            _id: '3',
-            title: 'Sample Blog Post Three',
-            content: 'A third sample post to fill out the blog grid. This demonstrates how multiple blog posts would appear on the page with proper spacing and styling.',
-            createdAt: new Date().toISOString()
-          }
-        ]);
-        setError(null);
+        console.error('Error fetching blogs:', err);
+        setBlogs([]);
       } finally {
         setLoading(false);
       }
@@ -47,49 +25,74 @@ const Blogs = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-12">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <p className="mt-4 text-gray-600">Loading blogs...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-red-600">{error}</p>
+      <div className="min-h-screen bg-navy px-4 sm:px-8 md:px-12 lg:px-16 py-8 sm:py-12 lg:py-16 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-teal"></div>
+          <p className="mt-4 text-white/60">Loading blogs...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen px-[103px] py-[80px] bg-navy">
-        <h1 className="text-[56px] font-extrabold gradient-text mb-8 animate-fadeInUp leading-tight">Blog</h1>
-      {blogs.length === 0 ? (
-        <p className="text-[18px] text-white/60">No blog posts yet. Check back soon!</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogs.map((blog) => (
-            <div key={blog._id} className="bg-gradient-to-br from-teal to-green rounded-[20px] p-6 card-hover">
-                <h3 className="text-[24px] font-semibold mb-3 text-white">{blog.title}</h3>
-                <p className="text-white/70 mb-4">
-                  {(blog.content || blog.snippet || blog.body || '').substring(0, 150)}...
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-white/60">
-                    {new Date(blog.createdAt).toLocaleDateString()}
-                  </span>
-                  <Link 
-                    to={`/blogs/${blog._id}`} 
-                    className="text-bright-green hover:underline font-semibold"
-                  >
-                    Read More →
-                  </Link>
+    <div className="min-h-screen px-4 sm:px-8 md:px-12 lg:px-16 py-8 sm:py-12 lg:py-16 bg-navy">
+      <div className="max-w-7xl animate-fadeInUp">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-display gradient-text mb-4 sm:mb-6">Blog</h1>
+        <p className="text-base sm:text-lg md:text-xl text-white/70 mb-8 sm:mb-12 lg:mb-16 max-w-3xl leading-relaxed">
+          Thoughts, tutorials, and insights on web development, technology, and my journey as a developer.
+        </p>
+        
+        {blogs.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-white/60 text-lg">No blog posts yet. Check back soon!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            {blogs.map((blog, index) => (
+              <article 
+                key={blog._id} 
+                className="modern-card rounded-2xl overflow-hidden group animate-fadeInUp"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                {/* Card header with gradient */}
+                <div className="h-2 bg-gradient-to-r from-teal to-green"></div>
+                
+                <div className="p-6">
+                  {/* Title */}
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-teal transition-colors line-clamp-2">
+                    {blog.title}
+                  </h3>
+                  
+                  {/* Snippet */}
+                  <p className="text-white/60 mb-4 text-sm leading-relaxed line-clamp-3">
+                    {blog.snippet || (blog.body || blog.content || '').substring(0, 150) + '...'}
+                  </p>
+                  
+                  {/* Meta info */}
+                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                    <span className="text-xs text-white/40">
+                      {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </span>
+                    <Link 
+                      to={`/blogs/${blog._id}`} 
+                      className="text-teal hover:text-bright-green font-semibold text-sm transition-colors flex items-center gap-1"
+                    >
+                      Read More 
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
                 </div>
-            </div>
-          ))}
-        </div>
-      )}
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
