@@ -58,6 +58,34 @@ const start = async () => {
   }
 };
 
+// Initialize database connection
+let cachedDb = null;
+
+const initDB = async () => {
+  if (cachedDb) {
+    return cachedDb;
+  }
+  try {
+    cachedDb = await connectDB();
+    return cachedDb;
+  } catch (err) {
+    console.error('Failed to connect to database', err.message);
+    throw err;
+  }
+};
+
+// Middleware to ensure DB connection for serverless
+if (process.env.VERCEL === '1') {
+  app.use(async (req, res, next) => {
+    try {
+      await initDB();
+      next();
+    } catch (err) {
+      res.status(500).json({ error: 'Database connection failed' });
+    }
+  });
+}
+
 // Only start server if not in serverless environment
 if (process.env.VERCEL !== '1') {
   start();
