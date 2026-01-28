@@ -28,9 +28,54 @@ app.use(morgan('dev'));
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Initialize database connection immediately for serverless
+let isConnecting = false;
+let isConnected = false;
+
+const ensureDbConnection = async () => {
+  if (isConnected) {
+    return;
+  }
+  
+  if (isConnecting) {
+    // Wait for existing connection attempt
+    while (isConnecting) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    return;
+  }
+
+  isConnecting = true;
+  try {
+    await connectDB();
+    isConnected = true;
+    console.log('DB connection established in serverless');
+  } catch (err) {
+    console.error('DB connection failed:', err.message);
+    throw err;
+  } finally {
+    isConnecting = false;
+  }
+};
+
+// Middleware to ensure DB connection for all API routes
+app.use('/api/*', async (req, res, next) => {
+  try {
+    await ensureDbConnection();
+    next();
+  } catch (err) {
+    console.error('Database connection error in middleware:', err);
+    res.status(503).json({ error: 'Database connection failed', message: err.message });
+  }
+});
+
 // Health check endpoint (before other routes)
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.status(200).json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    dbConnected: isConnected
+  });
 });
 
 app.use('/api/blogs', blogsRouter);
@@ -57,34 +102,6 @@ const start = async () => {
     process.exit(1);
   }
 };
-
-// Initialize database connection
-let cachedDb = null;
-
-const initDB = async () => {
-  if (cachedDb) {
-    return cachedDb;
-  }
-  try {
-    cachedDb = await connectDB();
-    return cachedDb;
-  } catch (err) {
-    console.error('Failed to connect to database', err.message);
-    throw err;
-  }
-};
-
-// Middleware to ensure DB connection for serverless
-if (process.env.VERCEL === '1') {
-  app.use(async (req, res, next) => {
-    try {
-      await initDB();
-      next();
-    } catch (err) {
-      res.status(500).json({ error: 'Database connection failed' });
-    }
-  });
-}
 
 // Only start server if not in serverless environment
 if (process.env.VERCEL !== '1') {
