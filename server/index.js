@@ -12,27 +12,41 @@ const projectsRouter = require('./routes/projectsRouter');
 
 const app = express();
 
+// CORS configuration for production
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || [
+    'http://localhost:3000',
+    'https://portfolio-site-frontend.vercel.app',
+    /\.vercel\.app$/
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 app.use(morgan('dev'));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
+
+// Health check endpoint (before other routes)
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/projects', projectsRouter);
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../client/build')));
+// Serve static files from the React app (only for non-Vercel environments)
+if (process.env.VERCEL !== '1') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
 
-// Handle React routing - fallback for all non-API requests
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-});
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
-});
+  // Handle React routing - fallback for all non-API requests
+  app.use((req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  });
+}
 
 const start = async () => {
   try {
