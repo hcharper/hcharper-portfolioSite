@@ -64,7 +64,7 @@ const Projects = () => {
             <p className="text-white/60 text-lg">No projects yet. Check back soon!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 auto-rows-fr">
             {projects.map((project, index) => {
               const imageUrl = getProjectImage(project);
               const projectLink = getProjectLink(project);
@@ -72,7 +72,7 @@ const Projects = () => {
               const cardContent = (
                 <>
                   {/* Project Image */}
-                  <div className="w-full h-40 sm:h-48 rounded-xl mb-4 sm:mb-6 overflow-hidden bg-gradient-to-br from-teal/20 to-green/20 relative">
+                  <div className="w-full h-48 sm:h-56 lg:h-64 rounded-xl mb-2 sm:mb-3 overflow-hidden bg-gradient-to-br from-teal/20 to-green/20 relative">
                     {imageUrl ? (
                       <img 
                         src={imageUrl} 
@@ -104,11 +104,11 @@ const Projects = () => {
                     )}
                   </div>
                   
-                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-2 sm:mb-3 group-hover:text-teal transition-colors">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1.5 sm:mb-2 group-hover:text-teal transition-colors">
                     {project.title}
                   </h3>
                   
-                  <p className="text-white/60 mb-4 sm:mb-6 leading-relaxed text-xs sm:text-sm">
+                  <p className="text-white/60 mb-3 sm:mb-4 leading-relaxed text-xs sm:text-sm">
                     {project.description}
                   </p>
                   
@@ -132,7 +132,7 @@ const Projects = () => {
                   href={projectLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="modern-card p-4 sm:p-6 lg:p-8 rounded-2xl group block cursor-pointer animate-fadeInUp"
+                  className="modern-card p-2.5 sm:p-3 rounded-2xl group block cursor-pointer animate-fadeInUp"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {cardContent}
@@ -140,7 +140,7 @@ const Projects = () => {
               ) : (
                 <div 
                   key={project._id} 
-                  className="modern-card p-4 sm:p-6 lg:p-8 rounded-2xl group animate-fadeInUp"
+                  className="modern-card p-2.5 sm:p-3 rounded-2xl group animate-fadeInUp"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {cardContent}

@@ -25,7 +25,7 @@ const Navigation = ({ mobile, onItemClick }) => {
   if (mobile) {
     return (
       <nav className="flex flex-col p-4">
-        {allNavItems.map((item) => (
+        {allNavItems.map((item, index) => (
           <Link
             key={item.name}
             to={item.path}
@@ -36,7 +36,9 @@ const Navigation = ({ mobile, onItemClick }) => {
                 : 'text-white/70 hover:text-white'
             }`}
           >
+            {index === 0 && <span className="text-white/50">[ </span>}
             '{item.name.toLowerCase()}'
+            {index < allNavItems.length - 1 ? <span className="text-white/50">,</span> : <span className="text-white/50"> ]</span>}
           </Link>
         ))}
       </nav>

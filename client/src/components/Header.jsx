@@ -5,7 +5,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-navy-light/50 backdrop-blur-xl px-4 sm:px-8 md:px-12 lg:px-[72px] py-4 lg:py-[24px] flex items-center justify-between border-b border-white/5">
+    <header className="relative bg-navy-light/50 backdrop-blur-xl px-4 sm:px-8 md:px-12 lg:px-[72px] py-4 lg:py-[24px] flex items-center justify-between border-b border-white/5 z-50">
       {/* Name */}
       <div className="flex items-center gap-3">
         <div className="flex flex-col">
@@ -38,7 +38,7 @@ const Header = () => {
       
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="absolute top-full left-0 right-0 bg-navy-light/95 backdrop-blur-xl border-b border-white/5 lg:hidden z-50">
+        <div className="absolute top-full left-0 right-0 bg-navy-light/95 backdrop-blur-xl border-b border-white/5 shadow-2xl lg:hidden z-[60]">
           <Navigation mobile onItemClick={() => setMobileMenuOpen(false)} />
         </div>
       )}

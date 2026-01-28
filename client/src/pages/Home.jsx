@@ -106,7 +106,7 @@ const Home = () => {
               
               const cardContent = (
                 <>
-                  <div className="w-full h-48 sm:h-56 lg:h-64 bg-gradient-to-br from-teal/20 to-green/20 rounded-xl mb-4 sm:mb-6 overflow-hidden relative">
+                  <div className="w-full h-56 sm:h-64 lg:h-72 bg-gradient-to-br from-teal/20 to-green/20 rounded-xl mb-2 sm:mb-3 overflow-hidden relative">
                     {imageUrl ? (
                       <img 
                         src={imageUrl} 
@@ -135,11 +135,11 @@ const Home = () => {
                     )}
                   </div>
                   
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3 group-hover:text-teal transition-colors">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-1.5 sm:mb-2 group-hover:text-teal transition-colors">
                     {project.title}
                   </h3>
                   
-                  <p className="text-white/60 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
+                  <p className="text-white/60 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">
                     {project.description}
                   </p>
                   
@@ -159,12 +159,12 @@ const Home = () => {
                   href={projectLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="modern-card p-6 sm:p-8 rounded-2xl group block cursor-pointer"
+                  className="modern-card p-3 sm:p-4 rounded-2xl group block cursor-pointer"
                 >
                   {cardContent}
                 </a>
               ) : (
-                <div key={project._id} className="modern-card p-6 sm:p-8 rounded-2xl group">
+                <div key={project._id} className="modern-card p-3 sm:p-4 rounded-2xl group">
                   {cardContent}
                 </div>
               );
