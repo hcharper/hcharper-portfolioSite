@@ -83,7 +83,7 @@ export default function AboutPage() {
           <p>
             Today, I focus on building scalable, maintainable applications using modern technologies
             like React, Next.js, Node.js, and cloud services. I&apos;m particularly interested in
-            developer tools, API design, and creating exceptional user experiences.
+            web3, blockchain networks, and solidity smart contracts.
           </p>
         </div>
       </section>
