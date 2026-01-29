@@ -93,14 +93,22 @@ export default function AboutPage() {
         <h2 className="text-2xl font-bold gradient-text">Experience</h2>
         <div className="space-y-4">
           {experience.map((exp, index) => (
-            <div key={index} className="modern-card p-6 rounded-2xl">
-              <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
-                <h3 className="text-xl font-semibold text-teal-400">{exp.title}</h3>
-                <span className="text-gray-500">{exp.period}</span>
+            <a
+              key={index}
+              href="https://harperwebservices.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <div className="modern-card p-6 rounded-2xl hover:opacity-95">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                  <h3 className="text-xl font-semibold text-teal-400">{exp.title}</h3>
+                  <span className="text-gray-500">{exp.period}</span>
+                </div>
+                <p className="text-gray-400 mb-2">{exp.company}</p>
+                <p className="text-gray-300">{exp.description}</p>
               </div>
-              <p className="text-gray-400 mb-2">{exp.company}</p>
-              <p className="text-gray-300">{exp.description}</p>
-            </div>
+            </a>
           ))}
         </div>
       </section>
