@@ -13,7 +13,7 @@ const experience = [
     description:
       "Building modern web applications for clients using React, Next.js, Node.js, and various databases.",
     url: "https://harperwebservices.com",
-    logo: "/experience-logo.png",
+    logo: "/HWSLogo.png",
   },
 ];
 
