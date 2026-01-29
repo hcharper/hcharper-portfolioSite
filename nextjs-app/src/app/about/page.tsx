@@ -10,8 +10,10 @@ const experience = [
     title: "Full-Stack Developer",
     company: "Harper Web Services LLC",
     period: "2025 - Present",
-    description: "Building modern web applications for clients using React, Next.js, Node.js, and various databases.",
+    description:
+      "Building modern web applications for clients using React, Next.js, Node.js, and various databases.",
     url: "https://harperwebservices.com",
+    logo: "/experience-logo.png",
   },
 ];
 
@@ -104,18 +106,26 @@ export default function AboutPage() {
               className="block group"
             >
               <div className="modern-card p-6 rounded-2xl hover:opacity-95 relative overflow-hidden">
-                <div className="absolute top-4 right-4 text-gray-400 opacity-90 group-hover:opacity-100 transition-opacity">
+                <div className="absolute top-4 right-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
                   </svg>
                 </div>
 
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
-                  <h3 className="text-xl font-semibold text-teal-400">{exp.title}</h3>
-                  <span className="text-gray-500">{exp.period}</span>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start gap-4">
+                    <img src={exp.logo || "/experience-logo.png"} alt={exp.title} className="w-12 h-12 object-contain flex-shrink-0" />
+                    <div>
+                      <h3 className="text-xl font-semibold text-teal-400 mb-1">{exp.title}</h3>
+                      <p className="text-gray-400 mb-1">{exp.company}</p>
+                      <p className="text-gray-300 text-sm">{exp.description}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex-shrink-0 self-start">
+                    <span className="text-gray-500">{exp.period}</span>
+                  </div>
                 </div>
-                <p className="text-gray-400 mb-2">{exp.company}</p>
-                <p className="text-gray-300">{exp.description}</p>
               </div>
             </a>
           ))}
