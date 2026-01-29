@@ -9,8 +9,9 @@ const experience = [
   {
     title: "Full-Stack Developer",
     company: "Harper Web Services LLC",
-    period: "Present",
+    period: "2025 - Present",
     description: "Building modern web applications for clients using React, Next.js, Node.js, and various databases.",
+    url: "https://harperwebservices.com",
   },
 ];
 
@@ -18,6 +19,7 @@ const education = [
   {
     institution: "Metana",
     logo: "/metana.png",
+    period: "2025 - Present",
     programs: [
       "Full Stack Bootcamp",
       "Web3 Bootcamp",
@@ -26,6 +28,7 @@ const education = [
   {
     institution: "Auburn University",
     logo: "/auburn.png",
+    period: "2020 - 2025",
     programs: [
       "Information Systems Management Major",
       "Computer Science Minor",
@@ -95,12 +98,18 @@ export default function AboutPage() {
           {experience.map((exp, index) => (
             <a
               key={index}
-              href="https://harperwebservices.com"
+              href={exp.url || "https://harperwebservices.com"}
               target="_blank"
               rel="noopener noreferrer"
-              className="block"
+              className="block group"
             >
-              <div className="modern-card p-6 rounded-2xl hover:opacity-95">
+              <div className="modern-card p-6 rounded-2xl hover:opacity-95 relative overflow-hidden">
+                <div className="absolute top-4 right-4 text-gray-400 opacity-90 group-hover:opacity-100 transition-opacity">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+                  </svg>
+                </div>
+
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
                   <h3 className="text-xl font-semibold text-teal-400">{exp.title}</h3>
                   <span className="text-gray-500">{exp.period}</span>
@@ -119,22 +128,28 @@ export default function AboutPage() {
         <div className="space-y-4">
           {education.map((edu, index) => (
             <div key={index} className="modern-card p-6 rounded-2xl">
-              <div className="flex items-start gap-4">
-                <img 
-                  src={edu.logo} 
-                  alt={edu.institution} 
-                  className="w-12 h-12 object-contain flex-shrink-0"
-                />
-                <div>
-                  <h3 className="text-xl font-semibold text-teal-400 mb-2">{edu.institution}</h3>
-                  <ul className="space-y-1">
-                    {edu.programs.map((program, pIndex) => (
-                      <li key={pIndex} className="text-gray-300 flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-teal-400 rounded-full"></span>
-                        {program}
-                      </li>
-                    ))}
-                  </ul>
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-4">
+                  <img 
+                    src={edu.logo} 
+                    alt={edu.institution} 
+                    className="w-12 h-12 object-contain flex-shrink-0"
+                  />
+                  <div>
+                    <h3 className="text-xl font-semibold text-teal-400 mb-2">{edu.institution}</h3>
+                    <ul className="space-y-1">
+                      {edu.programs.map((program, pIndex) => (
+                        <li key={pIndex} className="text-gray-300 flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 bg-teal-400 rounded-full"></span>
+                          {program}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="flex-shrink-0 text-gray-500 self-start">
+                  {edu.period}
                 </div>
               </div>
             </div>
